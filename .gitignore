@@ -1,6 +1,7 @@
 # Node
 node_modules/
 dist/
+.next/
 
 # Python
 __pycache__/
@@ -19,3 +20,7 @@ bin/
 # General
 .env
 .DS_Store
+
+
+ec2-key.pem
+ec2-key.pub
