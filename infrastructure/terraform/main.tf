@@ -11,7 +11,7 @@ data "aws_subnets" "default" {
 
 resource "aws_key_pair" "k3s_key" {
     key_name   = "finedge-k3s-key"
-    public_key = file("~/ec2-key.pub")
+    public_key = file("ec2-key.pub")
 }
 
 resource "aws_security_group" "k3s_sg" {
