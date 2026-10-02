@@ -62,13 +62,7 @@ resource "aws_instance" "k3s_server" {
   key_name                    = aws_key_pair.k3s_key.key_name 
 
   # Bootstrap k3s without Flannel and without default network policies
-  user_data = <<-EOF
-              #!/bin/bash
-              # Update packages
-              apt-get update -y
-              # Install k3s with explicit flags to disable default networking
-              curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--flannel-backend=none --disable-network-policy" sh -
-              EOF
+  user_data = file("userDataScript.sh")
 
   tags = {
     Name = "FinEdge-k3s-Server"
