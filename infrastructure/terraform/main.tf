@@ -1,30 +1,30 @@
 data "aws_vpc" "default" {
-    default = true
+  default = true
 }
 
 data "aws_subnets" "default" {
-    filter {
-        name   = "vpc-id"
-        values = [data.aws_vpc.default.id]
-    }
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.default.id]
+  }
 }
 
 resource "aws_key_pair" "k3s_key" {
-    key_name   = "finedge-k3s-key"
-    public_key = file("ec2-key.pub")
+  key_name   = "finedge-k3s-key"
+  public_key = file("ec2-key.pub")
 }
 
 resource "aws_security_group" "k3s_sg" {
-    name        = "finedge-k3s-sg"
-    description = "Allow SSH, HTTP, HTTPS, and Kube API traffic"
-    vpc_id      = data.aws_vpc.default.id
+  name        = "finedge-k3s-sg"
+  description = "Allow SSH, HTTP, HTTPS, and Kube API traffic"
+  vpc_id      = data.aws_vpc.default.id
 
-   ingress {
+  ingress {
     description = "SSH"
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] 
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
@@ -53,13 +53,13 @@ resource "aws_security_group" "k3s_sg" {
 }
 
 resource "aws_instance" "k3s_server" {
-  ami = "ami-01a00762f46d584a1"
+  ami           = "ami-01a00762f46d584a1"
   instance_type = "t3.small"
-  
+
   subnet_id                   = data.aws_subnets.default.ids[0]
   vpc_security_group_ids      = [aws_security_group.k3s_sg.id]
   associate_public_ip_address = true
-  key_name                    = aws_key_pair.k3s_key.key_name 
+  key_name                    = aws_key_pair.k3s_key.key_name
 
   # Bootstrap k3s without Flannel and without default network policies
   user_data = file("userDataScript.sh")

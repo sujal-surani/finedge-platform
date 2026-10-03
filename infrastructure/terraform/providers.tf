@@ -9,7 +9,7 @@ terraform {
 
 provider "aws" {
   region = "ap-south-1" # Deploying to Mumbai for lowest latency
-  
+
   default_tags {
     tags = {
       Project     = "FinEdge"
